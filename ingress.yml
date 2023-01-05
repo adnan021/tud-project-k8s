@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-quote
+  namespace: backend
+  annotations:
+    cert-manager.io/issuer: letsencrypt-nginx
+
+spec:
+  tls:
+    - hosts:
+      - tudproject.rovofy.com 
+      - api.rovofy.com
+      secretName: letsencrypt-nginx
+  rules:
+    - host: tudproject.rovofy.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: quote
+                port:
+                  # number: 8080
+                  number: 80
+    - host: api.rovofy.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: quote-backend
+                port:
+                  # number: 8080
+                  number: 8080
+  ingressClassName: nginx
